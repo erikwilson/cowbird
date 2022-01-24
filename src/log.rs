@@ -19,7 +19,7 @@ lazy_static! {
             ) as Box<dyn Write + Send>,
         };
 
-        return Logger::root(Mutex::new(Json::default(output)).fuse(), pkg_info);
+        Logger::root(Mutex::new(Json::default(output)).fuse(), pkg_info)
     };
     static ref LOG_FILE: Mutex<String> = Mutex::new("-".to_string());
 }

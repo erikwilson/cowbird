@@ -35,7 +35,7 @@ pub enum Commands {
 pub fn parse() -> Options {
     let opts = Options::parse();
     log::set_log_file(opts.log.clone());
-    return opts;
+    opts
 }
 
 pub fn run() {
