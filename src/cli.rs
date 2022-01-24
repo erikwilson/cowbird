@@ -1,5 +1,5 @@
-use clap::{Parser, AppSettings, Subcommand};
-use crate::{log, process, file, network};
+use crate::{file, log, network, process};
+use clap::{AppSettings, Parser, Subcommand};
 
 #[derive(Parser)]
 #[clap(author = "Erik Wilson <erik.e.wilson@gmail.com>")]
@@ -20,7 +20,10 @@ pub struct Options {
 #[derive(Subcommand)]
 pub enum Commands {
     /// Starts a new process
-    Exec { executable: String, args: Vec<String> },
+    Exec {
+        executable: String,
+        args: Vec<String>,
+    },
     /// Create or modify a file
     Copy { source: String, target: String },
     /// Delete a file
@@ -37,16 +40,15 @@ pub fn parse() -> Options {
 
 pub fn run() {
     match &parse().command {
-        Commands::Exec { executable, args } =>
-            process::exec( executable, args ),
+        Commands::Exec { executable, args } => process::exec(executable, args),
 
-        Commands::Copy { source, target } =>
-            file::copy( source, target),
+        Commands::Copy { source, target } => file::copy(source, target),
 
-        Commands::Delete { file } =>
-            file::delete( file ),
+        Commands::Delete { file } => file::delete(file),
 
-        Commands::NetCat { source, destination } =>
-            network::net_cat( source, destination ),
+        Commands::NetCat {
+            source,
+            destination,
+        } => network::net_cat(source, destination),
     }
 }
