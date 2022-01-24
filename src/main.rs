@@ -1,3 +1,5 @@
+use cowbird::cli;
+
 fn main() {
-    println!("Hello, world!");
+    cli::run();
 }
