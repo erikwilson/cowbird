@@ -1,5 +1,8 @@
-use crate::{file, log, network, process};
+use crate::{file, log, network, process, util};
 use clap::{AppSettings, Parser, Subcommand};
+use network::Protocol;
+use std::net::SocketAddr;
+use util::BinaryData;
 
 #[derive(Parser)]
 #[clap(author = "Erik Wilson <erik.e.wilson@gmail.com>")]
@@ -20,16 +23,43 @@ pub struct Options {
 #[derive(Subcommand)]
 pub enum Commands {
     /// Starts a new process
-    Exec {
+    Start {
+        // Executable to run
         executable: String,
+        // Arguments for executable
         args: Vec<String>,
     },
-    /// Create or modify a file
-    Copy { source: String, target: String },
+    /// Create a file
+    Create {
+        /// File to create
+        file: String,
+    },
+    /// Modify a file
+    Modify {
+        /// File to modify
+        file: String,
+        /// Bytes to write, decode hex if value starts with "0x"
+        data: BinaryData,
+        /// Byte offset for writing data
+        #[clap(default_value_t = 0)]
+        offset: u64,
+    },
     /// Delete a file
-    Delete { file: String },
-    /// Network copy
-    NetCat { source: String, destination: String },
+    Delete {
+        /// File to delete
+        file: String,
+    },
+    /// Connect and send data over network
+    Connect {
+        /// Destination address:port
+        destination: SocketAddr,
+        /// Bytes to write, decode hex if value starts with "0x"
+        #[clap(default_value = "")]
+        data: BinaryData,
+        /// Network protocol to use
+        #[clap(default_value = "UDP")]
+        protocol: Protocol,
+    },
 }
 
 pub fn parse() -> Options {
@@ -40,15 +70,18 @@ pub fn parse() -> Options {
 
 pub fn run() {
     match &parse().command {
-        Commands::Exec { executable, args } => process::exec(executable, args),
+        Commands::Start { executable, args } => process::start(executable, args),
 
-        Commands::Copy { source, target } => file::copy(source, target),
+        Commands::Create { file } => file::create(file),
+
+        Commands::Modify { file, data, offset } => file::modify(file, &*data.bytes, offset),
 
         Commands::Delete { file } => file::delete(file),
 
-        Commands::NetCat {
-            source,
+        Commands::Connect {
             destination,
-        } => network::net_cat(source, destination),
+            data,
+            protocol,
+        } => network::connect(protocol, destination, &*data.bytes),
     }
 }

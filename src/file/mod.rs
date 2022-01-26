@@ -1,15 +1,49 @@
 use crate::log;
+use std::fs;
+use std::os::unix::prelude::FileExt;
 
 lazy_static! {
     static ref LOGGER: slog::Logger = log::LOGGER.new(o!("type" => "file"));
 }
 
-pub fn copy(source: &str, target: &str) {
-    println!("todo: implement copy: {:?} {:?}", source, target);
-    info!(LOGGER,"copy"; "source" => source, "target" => target);
+pub fn create(file: &str) {
+    let logger = LOGGER.new(o!(
+        "cmd" => "create",
+        "file" => file.to_string(),
+    ));
+    match fs::OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(file)
+    {
+        Ok(_) => info!(logger, "ok"),
+        Err(error) => error!(logger, "error: {}", error),
+    }
+}
+
+pub fn modify(file: &str, bytes: &[u8], offset: &u64) {
+    let logger = LOGGER.new(o!(
+        "cmd" => "modify",
+        "file" => file.to_string(),
+        "size" => bytes.len(),
+        "offset" => *offset,
+    ));
+    match fs::OpenOptions::new().write(true).open(file) {
+        Ok(f) => match f.write_at(bytes, *offset) {
+            Ok(_) => info!(logger, "ok"),
+            Err(error) => error!(logger, "error: write: {}", error),
+        },
+        Err(error) => error!(logger, "error: open: {}", error),
+    }
 }
 
 pub fn delete(file: &str) {
-    println!("todo: implement delete: {:?}", file);
-    info!(LOGGER,"delete"; "file" => file);
+    let logger = LOGGER.new(o!(
+        "cmd" => "delete",
+        "file" => file.to_string(),
+    ));
+    match fs::remove_file(file) {
+        Ok(_) => info!(logger, "ok"),
+        Err(error) => error!(logger, "error: {}", error),
+    }
 }
