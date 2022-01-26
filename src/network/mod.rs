@@ -72,7 +72,10 @@ fn tcp_send(destination: &SocketAddr, bytes: &[u8]) -> Result<SendInfo, Box<dyn 
 }
 
 fn udp_send(destination: &SocketAddr, bytes: &[u8]) -> Result<SendInfo, Box<dyn Error>> {
-    let socket = UdpSocket::bind("127.0.0.1:0")?;
+    let socket = UdpSocket::bind(match destination.is_ipv6() {
+        true => "[::]:0",
+        false => "0.0.0.0:0",
+    })?;
     Ok(SendInfo {
         source: socket.local_addr()?.to_string(),
         size: socket.send_to(bytes, destination)?,
