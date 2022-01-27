@@ -1,10 +1,50 @@
-use crate::log;
+use crate::{log, network::util::Protocol, util::binary_decode};
+use std::error::Error;
+use std::io::prelude::*;
+use std::net::{SocketAddr, TcpStream, UdpSocket};
+
+pub mod util;
 
 lazy_static! {
     static ref LOGGER: slog::Logger = log::LOGGER.new(o!("type" => "network"));
 }
 
-pub fn net_cat(source: &str, destination: &str) {
-    println!("todo: implement net-cat: {:?} {:?}", source, destination);
-    info!(LOGGER,"net_cat"; "source" => source, "destination" => destination);
+struct SendResult {
+    source: String,
+    size: usize,
+}
+
+pub fn send(dest: &SocketAddr, data: &str, proto: &Protocol) {
+    let bytes: &[u8] = &*binary_decode(data);
+    let logger = LOGGER.new(o!(
+        "cmd" => "connect",
+        "proto" => proto.to_string(),
+        "dest" => dest.to_string(),
+    ));
+    match match &proto {
+        Protocol::TCP => tcp_send(dest, bytes),
+        Protocol::UDP => udp_send(dest, bytes),
+    } {
+        Ok(info) => info!(logger, "ok"; o!("source" => info.source, "size" => info.size )),
+        Err(error) => error!(logger, "{}", error),
+    }
+}
+
+fn tcp_send(destination: &SocketAddr, bytes: &[u8]) -> Result<SendResult, Box<dyn Error>> {
+    let mut stream = TcpStream::connect(destination)?;
+    Ok(SendResult {
+        source: stream.local_addr()?.to_string(),
+        size: stream.write(bytes)?,
+    })
+}
+
+fn udp_send(destination: &SocketAddr, bytes: &[u8]) -> Result<SendResult, Box<dyn Error>> {
+    let socket = UdpSocket::bind(match destination.is_ipv6() {
+        true => "[::]:0",
+        false => "0.0.0.0:0",
+    })?;
+    Ok(SendResult {
+        source: socket.local_addr()?.to_string(),
+        size: socket.send_to(bytes, destination)?,
+    })
 }

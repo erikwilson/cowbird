@@ -12,4 +12,10 @@ license = "MIT OR Apache-2.0"
 clap = { version = "3.0.10", features = ["derive"] }
 slog = "~2.5"
 slog-json = "~2.5"
+slog-envlogger = "~2.2"
 lazy_static = "~1.4"
+hex = "~0.4"
+substring = "~1.4"
+serde = { version = "1.0", features = ["derive"] }
+serde_yaml = "~0.8"
+yaml-split = "~0.3"

@@ -1,0 +1,40 @@
+#!/usr/bin/env cargo run -- -l /dev/stderr script
+---
+# Start example without args
+Start:
+  exec: echo
+---
+# Create example
+Create:
+  file: test.tmp
+---
+# Modify example without offset
+Modify:
+  file: test.tmp
+  data: ok
+---
+# Modify example with hex data and offset
+Modify:
+  file: test.tmp
+  data: 0x0A
+  offset: 3
+---
+# Display contents of modified file
+Start:
+  exec: cat
+  args:
+    - test.tmp
+---
+# Delete example
+Delete:
+  file: test.tmp
+---
+# Send example without data or proto (default UDP)
+Send:
+  dest: "8.8.8.8:8888"
+---
+# Send example with hex data and TCP protocol
+Send:
+  dest: "127.0.0.1:8888"
+  data: 0xdeadbeef
+  proto: tcp
