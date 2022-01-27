@@ -1,4 +1,5 @@
-use slog::{Drain, Logger};
+use slog::{Drain, FilterLevel, Logger};
+use slog_envlogger::LogBuilder;
 use slog_json::Json;
 use std::io::Write;
 use std::sync::Mutex;
@@ -19,7 +20,12 @@ lazy_static! {
             ) as Box<dyn Write + Send>,
         };
 
-        Logger::root(Mutex::new(Json::default(output)).fuse(), pkg_info)
+        let mut builder = LogBuilder::new(Json::default(output)).filter(None, FilterLevel::Info);
+        if let Ok(s) = std::env::var("LOG_LEVEL") {
+            builder = builder.parse(&s);
+        }
+
+        Logger::root(Mutex::new(builder.build()).fuse(), pkg_info)
     };
     static ref LOG_FILE: Mutex<String> = Mutex::new("-".to_string());
 }
