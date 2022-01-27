@@ -38,3 +38,6 @@ Send:
   dest: "127.0.0.1:8888"
   data: 0xdeadbeef
   proto: tcp
+---
+# JSON example
+{ "Start": { "exec": "echo" } }
