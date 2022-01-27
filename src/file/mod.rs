@@ -1,4 +1,4 @@
-use crate::log;
+use crate::{log, util::binary_decode};
 use std::fs;
 use std::os::unix::prelude::FileExt;
 
@@ -21,7 +21,8 @@ pub fn create(file: &str) {
     }
 }
 
-pub fn modify(file: &str, bytes: &[u8], offset: &u64) {
+pub fn modify(file: &str, data: &str, offset: &u64) {
+    let bytes: &[u8] = &*binary_decode(data);
     let logger = LOGGER.new(o!(
         "cmd" => "modify",
         "file" => file.to_string(),

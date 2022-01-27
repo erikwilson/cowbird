@@ -1,0 +1,93 @@
+use crate::{file, log, network, process, util};
+use clap::{Parser, Subcommand};
+use network::util::Protocol;
+use serde::{Deserialize, Serialize};
+use std::io::Read;
+use std::net::SocketAddr;
+use yaml_split::DocumentIterator;
+
+#[derive(Subcommand, Debug, PartialEq, Serialize, Deserialize)]
+pub enum Commands {
+    /// Starts a new process
+    Start {
+        // Executable to run
+        exec: String,
+        // Arguments for executable
+        #[serde(default)]
+        args: Vec<String>,
+    },
+    /// Create a file
+    Create {
+        /// File to create
+        file: String,
+    },
+    /// Modify a file
+    Modify {
+        /// File to modify
+        file: String,
+        /// Bytes to write, decode hex if value starts with "0x"
+        data: String,
+        /// Byte offset for writing data
+        #[clap(default_value_t = 0)]
+        #[serde(default)]
+        offset: u64,
+    },
+    /// Delete a file
+    Delete {
+        /// File to delete
+        file: String,
+    },
+    /// Send data over network
+    Send {
+        /// Destination address:port
+        dest: SocketAddr,
+        /// Bytes to write, decode hex if value starts with "0x"
+        #[clap(default_value = "")]
+        #[serde(default)]
+        data: String,
+        /// Network protocol to use
+        #[clap(default_value_t = Protocol::default())]
+        #[serde(default)]
+        proto: Protocol,
+    },
+    /// Run commands from YAML input
+    Script {
+        /// File to read
+        #[clap(default_value = "-")]
+        file: String,
+    },
+}
+
+pub fn run(command: &Commands) {
+    // println!("{}", serde_yaml::to_string(command).unwrap());
+    match command {
+        Commands::Start { exec, args } => process::start(exec, args),
+
+        Commands::Create { file } => file::create(file),
+
+        Commands::Modify { file, data, offset } => file::modify(file, data, offset),
+
+        Commands::Delete { file } => file::delete(file),
+
+        Commands::Send { dest, data, proto } => network::send(dest, data, proto),
+
+        Commands::Script { file } => script(file),
+    }
+}
+
+pub fn script(file: &str) {
+    let input = match file {
+        "-" => Box::new(std::io::stdin()) as Box<dyn Read + Send>,
+        path => Box::new(
+            std::fs::OpenOptions::new()
+                .read(true)
+                .open(path)
+                .expect("failed to open input"),
+        ) as Box<dyn Read + Send>,
+    };
+    let doc_iter = DocumentIterator::new(input);
+    for doc in doc_iter {
+        let cmd: &Commands = &serde_yaml::from_str(&*doc.unwrap()).expect("failed to parse input");
+        run(cmd);
+    }
+}

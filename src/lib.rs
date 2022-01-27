@@ -11,5 +11,6 @@ pub mod network;
 pub mod process;
 
 pub mod cli;
+pub mod cmd;
 pub mod log;
 pub mod util;

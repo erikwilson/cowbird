@@ -1,21 +1,21 @@
+use crate::log;
+use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 use substring::Substring;
 
-pub struct BinaryData {
-    pub bytes: Vec<u8>,
+lazy_static! {
+    static ref LOGGER: slog::Logger = log::LOGGER.new(o!("type" => "util"));
 }
 
-impl FromStr for BinaryData {
-    type Err = hex::FromHexError;
-    fn from_str(data: &str) -> Result<Self, Self::Err> {
-        match data.substring(0, 2) {
-            "0x" => match hex::decode(data[2..].as_bytes()) {
-                Ok(bytes) => Ok(BinaryData { bytes }),
-                Err(error) => Err(error),
-            },
-            _ => Ok(BinaryData {
-                bytes: data.as_bytes().to_vec(),
-            }),
-        }
+pub fn binary_decode(data: &str) -> Vec<u8> {
+    match data.substring(0, 2) {
+        "0x" => match hex::decode(data[2..].as_bytes()) {
+            Ok(bytes) => bytes,
+            Err(error) => {
+                warn!(LOGGER, "parse error: {}", error);
+                data.as_bytes().to_vec()
+            }
+        },
+        _ => data.as_bytes().to_vec(),
     }
 }

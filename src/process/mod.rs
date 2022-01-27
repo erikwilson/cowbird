@@ -5,14 +5,14 @@ lazy_static! {
     static ref LOGGER: slog::Logger = log::LOGGER.new(o!("type" => "process"));
 }
 
-pub fn start(executable: &str, args: &[String]) {
+pub fn start(exec: &str, args: &[String]) {
     let logger = LOGGER.new(o!(
         "cmd" => "start",
-        "executable" => executable.to_string(),
+        "exec" => exec.to_string(),
         "args" => format!("{:?}", args),
     ));
     debug!(logger, "start");
-    match Command::new(executable).args(args).status() {
+    match Command::new(exec).args(args).status() {
         Ok(status) => match status.success() {
             true => info!(logger, "ok"),
             false => warn!(logger, "{}", status),
