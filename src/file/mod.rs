@@ -1,9 +1,6 @@
 use crate::{log, util::binary_decode};
+use positioned_io::WriteAt;
 use std::fs;
-#[cfg(target_family = "unix")]
-use std::os::unix::prelude::FileExt;
-#[cfg(target_family = "windows")]
-use std::os::windows::prelude::FileExt;
 
 lazy_static! {
     static ref LOGGER: slog::Logger = log::LOGGER.new(o!("type" => "file"));
@@ -33,7 +30,7 @@ pub fn modify(file: &str, data: &str, offset: &u64) {
         "offset" => *offset,
     ));
     match fs::OpenOptions::new().write(true).open(file) {
-        Ok(f) => match f.write_at(bytes, *offset) {
+        Ok(mut f) => match f.write_at(*offset, bytes) {
             Ok(_) => info!(logger, "ok"),
             Err(error) => error!(logger, "error: write: {}", error),
         },
