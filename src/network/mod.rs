@@ -1,12 +1,27 @@
-use crate::{log, network::util::Protocol, util::binary_decode};
+use crate::{log, util::binary_decode};
+use clap::ArgEnum;
+use serde::{Deserialize, Serialize};
 use std::error::Error;
 use std::io::prelude::*;
 use std::net::{SocketAddr, TcpStream, UdpSocket};
-
-pub mod util;
+use std::str;
 
 lazy_static! {
     static ref LOGGER: slog::Logger = log::LOGGER.new(o!("type" => "network"));
+}
+
+#[derive(ArgEnum, Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub enum Protocol {
+    #[serde(alias = "tcp")]
+    TCP,
+    #[serde(alias = "udp")]
+    UDP,
+}
+
+impl Default for Protocol {
+    fn default() -> Self {
+        Protocol::UDP
+    }
 }
 
 struct SendResult {
@@ -18,7 +33,7 @@ pub fn send(dest: &SocketAddr, data: &str, proto: &Protocol) {
     let bytes: &[u8] = &*binary_decode(data);
     let logger = LOGGER.new(o!(
         "cmd" => "connect",
-        "proto" => proto.to_string(),
+        "proto" => format!("{:?}", proto),
         "dest" => dest.to_string(),
     ));
     match match &proto {

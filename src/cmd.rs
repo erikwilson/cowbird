@@ -1,6 +1,6 @@
 use crate::{file, log, network, process, util};
 use clap::{Parser, Subcommand};
-use network::util::Protocol;
+use network::Protocol;
 use serde::{Deserialize, Serialize};
 use std::io::Read;
 use std::net::SocketAddr;
@@ -28,7 +28,7 @@ pub enum Commands {
         /// Bytes to write, decode hex if value starts with "0x"
         data: String,
         /// Byte offset for writing data
-        #[clap(default_value_t = 0)]
+        #[clap(default_value_t)]
         #[serde(default)]
         offset: u64,
     },
@@ -46,7 +46,7 @@ pub enum Commands {
         #[serde(default)]
         data: String,
         /// Network protocol to use
-        #[clap(default_value_t = Protocol::default())]
+        #[clap(arg_enum, default_value_t)]
         #[serde(default)]
         proto: Protocol,
     },
