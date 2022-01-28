@@ -19,3 +19,5 @@ substring = "~1.4"
 serde = { version = "1.0", features = ["derive"] }
 serde_yaml = "~0.8"
 yaml-split = "~0.3"
+whoami = "~1.2"
+chrono = "~0.4"

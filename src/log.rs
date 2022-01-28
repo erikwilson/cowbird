@@ -6,7 +6,14 @@ use std::sync::Mutex;
 
 lazy_static! {
     pub static ref LOGGER: Logger = {
-        let pkg_info = o!("name" => env!["CARGO_PKG_NAME"], "version" => env!("CARGO_PKG_VERSION"));
+        let args: Vec<String> = std::env::args().collect();
+        let pkg_info = o!(
+            "name" => env!["CARGO_PKG_NAME"],
+            "version" => env!("CARGO_PKG_VERSION"),
+            "username" => whoami::username(),
+            "cmd_line" => args.join(" "),
+            "pid" => std::process::id(),
+        );
 
         let output = match &*get_log_file() {
             "-" => Box::new(std::io::stdout()) as Box<dyn Write + Send>,
