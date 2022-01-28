@@ -2,9 +2,7 @@ use crate::{file, log, network, process, util};
 use clap::{Parser, Subcommand};
 use network::Protocol;
 use serde::{Deserialize, Serialize};
-use std::io::Read;
 use std::net::SocketAddr;
-use yaml_split::DocumentIterator;
 
 #[derive(Subcommand, Debug, PartialEq, Serialize, Deserialize)]
 pub enum Commands {
@@ -59,7 +57,6 @@ pub enum Commands {
 }
 
 pub fn run(command: &Commands) {
-    // println!("{}", serde_yaml::to_string(command).unwrap());
     match command {
         Commands::Start { exec, args } => process::start(exec, args),
 
@@ -71,23 +68,6 @@ pub fn run(command: &Commands) {
 
         Commands::Send { dest, data, proto } => network::send(dest, data, proto),
 
-        Commands::Script { file } => script(file),
-    }
-}
-
-pub fn script(file: &str) {
-    let input = match file {
-        "-" => Box::new(std::io::stdin()) as Box<dyn Read + Send>,
-        path => Box::new(
-            std::fs::OpenOptions::new()
-                .read(true)
-                .open(path)
-                .expect("failed to open input"),
-        ) as Box<dyn Read + Send>,
-    };
-    let doc_iter = DocumentIterator::new(input);
-    for doc in doc_iter {
-        let cmd: &Commands = &serde_yaml::from_str(&*doc.unwrap()).expect("failed to parse input");
-        run(cmd);
+        Commands::Script { file } => util::script(file),
     }
 }
