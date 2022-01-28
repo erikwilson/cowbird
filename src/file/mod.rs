@@ -1,6 +1,9 @@
 use crate::{log, util::binary_decode};
 use std::fs;
+#[cfg(target_family = "unix")]
 use std::os::unix::prelude::FileExt;
+#[cfg(target_family = "windows")]
+use std::os::windows::prelude::FileExt;
 
 lazy_static! {
     static ref LOGGER: slog::Logger = log::LOGGER.new(o!("type" => "file"));
