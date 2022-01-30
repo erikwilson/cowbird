@@ -3,6 +3,9 @@ use chrono::Local;
 use std::process::Command;
 use std::time::SystemTime;
 
+#[cfg(test)]
+mod tests;
+
 lazy_static! {
     static ref LOGGER: slog::Logger = log::LOGGER.new(o!("type" => "process"));
 }

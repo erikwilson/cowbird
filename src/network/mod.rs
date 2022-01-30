@@ -6,6 +6,9 @@ use std::io::prelude::*;
 use std::net::{SocketAddr, TcpStream, UdpSocket};
 use std::str;
 
+#[cfg(test)]
+mod tests;
+
 lazy_static! {
     static ref LOGGER: slog::Logger = log::LOGGER.new(o!("type" => "network"));
 }
@@ -32,7 +35,7 @@ struct SendResult {
 pub fn send(dest: &SocketAddr, data: &str, proto: &Protocol) {
     let bytes: &[u8] = &*binary_decode(data);
     let logger = LOGGER.new(o!(
-        "cmd" => "connect",
+        "cmd" => "send",
         "proto" => format!("{:?}", proto),
         "dest" => dest.to_string(),
     ));

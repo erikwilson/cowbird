@@ -5,6 +5,9 @@ use std::str::FromStr;
 use substring::Substring;
 use yaml_split::DocumentIterator;
 
+#[cfg(test)]
+mod tests;
+
 lazy_static! {
     static ref LOGGER: slog::Logger = log::LOGGER.new(o!("type" => "util"));
 }

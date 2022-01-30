@@ -17,7 +17,7 @@ Modify:
 Modify:
   file: test.tmp
   data: 0x0A
-  offset: 3
+  offset: 2
 ---
 # Display contents of modified file
 Start:

@@ -2,6 +2,9 @@ use crate::{log, util::binary_decode};
 use positioned_io::WriteAt;
 use std::fs;
 
+#[cfg(test)]
+mod tests;
+
 lazy_static! {
     static ref LOGGER: slog::Logger = log::LOGGER.new(o!("type" => "file"));
 }
