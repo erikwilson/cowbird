@@ -6,15 +6,15 @@ use tempfile::{NamedTempFile, TempDir};
 fn test_create() {
     let dir = &TempDir::new().unwrap();
     let file = dir.path().join("create-test");
-    assert_eq!(file.is_file(), false);
+    assert!(!file.is_file());
     create(file.to_str().unwrap());
-    assert_eq!(file.is_file(), true);
+    assert!(file.is_file());
 }
 
 #[test]
 fn test_modify() {
     let tmp_file = &NamedTempFile::new().unwrap();
-    assert_eq!(tmp_file.path().is_file(), true);
+    assert!(tmp_file.path().is_file());
     let file = tmp_file.path().to_str().unwrap();
     assert_eq!(read_to_string(file).unwrap(), "");
     modify(file, "ok", &0);
@@ -26,7 +26,7 @@ fn test_modify() {
 #[test]
 fn test_delete() {
     let tmp_file = &NamedTempFile::new().unwrap();
-    assert_eq!(tmp_file.path().is_file(), true);
+    assert!(tmp_file.path().is_file());
     delete(tmp_file.path().to_str().unwrap());
-    assert_eq!(tmp_file.path().is_file(), false);
+    assert!(!tmp_file.path().is_file());
 }

@@ -13,9 +13,9 @@ fn test_script() {
         exec: String::from("touch"),
         args: vec![file.to_str().unwrap().to_string()],
     };
-    let cmd_src = format!("{}", serde_yaml::to_string(command).unwrap());
+    let cmd_src = serde_yaml::to_string(command).unwrap();
     File::create(src).unwrap().write_all(cmd_src.as_bytes());
-    assert_eq!(file.is_file(), false);
+    assert!(!file.is_file());
     script(src);
-    assert_eq!(file.is_file(), true);
+    assert!(file.is_file());
 }

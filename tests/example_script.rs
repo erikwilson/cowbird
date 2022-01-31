@@ -12,45 +12,45 @@ fn test_example_script() {
     let data = String::from_utf8(output.stdout).unwrap();
     let logs = String::from_utf8(output.stderr).unwrap();
     assert_eq!(data, "\nok\n\n", "stderr: {}", logs);
-    for line in logs.split("\n") {
+    for line in logs.split('\n') {
         if line.substring(0, 1) == "{" {
-            let _ = write!(std::io::stdout(), "{}\n", line);
+            let _ = writeln!(std::io::stdout(), "{}", line);
             let v: Value = serde_json::from_str(line).unwrap();
             assert_eq!(v["msg"], "ok");
-            assert_eq!(v["ts"].is_null(), false);
-            assert_eq!(v["level"].is_null(), false);
-            assert_eq!(v["name"].is_null(), false);
-            assert_eq!(v["version"].is_null(), false);
-            assert_eq!(v["username"].is_null(), false);
-            assert_eq!(v["cmd_line"].is_null(), false);
-            assert_eq!(v["pid"].is_null(), false);
-            assert_eq!(v["type"].is_null(), false);
-            assert_eq!(v["cmd"].is_null(), false);
+            assert!(!v["ts"].is_null());
+            assert!(!v["level"].is_null());
+            assert!(!v["name"].is_null());
+            assert!(!v["version"].is_null());
+            assert!(!v["username"].is_null());
+            assert!(!v["cmd_line"].is_null());
+            assert!(!v["pid"].is_null());
+            assert!(!v["type"].is_null());
+            assert!(!v["cmd"].is_null());
             let cmd = &*v["cmd"].as_str().unwrap();
             match cmd {
                 "start" => {
-                    assert_eq!(v["start_ts"].is_null(), false);
-                    assert_eq!(v["exec"].is_null(), false);
-                    assert_eq!(v["args"].is_null(), false);
+                    assert!(!v["start_ts"].is_null());
+                    assert!(!v["exec"].is_null());
+                    assert!(!v["args"].is_null());
                 }
                 "create" => {
-                    assert_eq!(v["file"].is_null(), false);
+                    assert!(!v["file"].is_null());
                 }
                 "modify" => {
-                    assert_eq!(v["file"].is_null(), false);
-                    assert_eq!(v["offset"].is_null(), false);
-                    assert_eq!(v["size"].is_null(), false);
+                    assert!(!v["file"].is_null());
+                    assert!(!v["offset"].is_null());
+                    assert!(!v["size"].is_null());
                 }
                 "delete" => {
-                    assert_eq!(v["file"].is_null(), false);
+                    assert!(!v["file"].is_null());
                 }
                 "send" => {
-                    assert_eq!(v["source"].is_null(), false);
-                    assert_eq!(v["dest"].is_null(), false);
-                    assert_eq!(v["proto"].is_null(), false);
-                    assert_eq!(v["size"].is_null(), false);
+                    assert!(!v["source"].is_null());
+                    assert!(!v["dest"].is_null());
+                    assert!(!v["proto"].is_null());
+                    assert!(!v["size"].is_null());
                 }
-                _ => assert!(false, "unknown cmd: {}", cmd),
+                _ => panic!("unknown cmd: {}", cmd),
             }
         };
     }
