@@ -5,12 +5,13 @@ use std::process::Command;
 use substring::Substring;
 
 #[test]
+// Needs a unix system with user-land
 fn test_example_script() {
     let _listener = &TcpListener::bind("127.0.0.1:8888").unwrap();
     let output = Command::new("./examples/test.yaml").output().unwrap();
     let data = String::from_utf8(output.stdout).unwrap();
     let logs = String::from_utf8(output.stderr).unwrap();
-    assert_eq!(data, "\nok\n\n");
+    assert_eq!(data, "\nok\n\n", "stderr: {}", logs);
     for line in logs.split("\n") {
         if line.substring(0, 1) == "{" {
             let _ = write!(std::io::stdout(), "{}\n", line);
