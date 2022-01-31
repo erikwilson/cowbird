@@ -1,4 +1,4 @@
-#!/usr/bin/env cargo run -- -l /dev/stderr script
+#!/usr/bin/env -S cargo run -- -l /dev/stderr script
 ---
 # Start example without args
 Start:
