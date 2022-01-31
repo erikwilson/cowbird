@@ -6,9 +6,9 @@ use tempfile::TempDir;
 
 #[test]
 fn test_script() {
-    let dir = &TempDir::new().unwrap();
+    let dir = TempDir::new().unwrap();
     let file = dir.path().join("proc-start-touch-test");
-    let src: &str = &dir.path().join("touch.yaml").to_str().unwrap().to_string();
+    let src = &dir.path().join("touch.yaml").to_str().unwrap().to_string();
     let command = &cmd::Commands::Start {
         exec: String::from("touch"),
         args: vec![file.to_str().unwrap().to_string()],

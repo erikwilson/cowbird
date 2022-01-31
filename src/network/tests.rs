@@ -3,7 +3,7 @@ use std::net::{TcpListener, TcpStream, UdpSocket};
 
 #[test]
 fn test_send_tcp() {
-    let listener = &TcpListener::bind("127.0.0.1:0").unwrap();
+    let listener = TcpListener::bind("127.0.0.1:0").unwrap();
     let addr = &listener.local_addr().unwrap();
     send(addr, "hello tcp", &Protocol::TCP);
     let (mut stream, _) = listener.accept().unwrap();

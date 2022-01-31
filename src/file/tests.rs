@@ -4,7 +4,7 @@ use tempfile::{NamedTempFile, TempDir};
 
 #[test]
 fn test_create() {
-    let dir = &TempDir::new().unwrap();
+    let dir = TempDir::new().unwrap();
     let file = dir.path().join("create-test");
     assert!(!file.is_file());
     create(file.to_str().unwrap());
@@ -13,7 +13,7 @@ fn test_create() {
 
 #[test]
 fn test_modify() {
-    let tmp_file = &NamedTempFile::new().unwrap();
+    let tmp_file = NamedTempFile::new().unwrap();
     assert!(tmp_file.path().is_file());
     let file = tmp_file.path().to_str().unwrap();
     assert_eq!(read_to_string(file).unwrap(), "");
@@ -25,7 +25,7 @@ fn test_modify() {
 
 #[test]
 fn test_delete() {
-    let tmp_file = &NamedTempFile::new().unwrap();
+    let tmp_file = NamedTempFile::new().unwrap();
     assert!(tmp_file.path().is_file());
     delete(tmp_file.path().to_str().unwrap());
     assert!(!tmp_file.path().is_file());
