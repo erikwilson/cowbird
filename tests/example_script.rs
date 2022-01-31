@@ -1,16 +1,42 @@
 use serde_json::Value;
+use std::fs;
 use std::io::prelude::*;
 use std::net::TcpListener;
 use std::process::Command;
+use stdio_override::StdoutOverride;
 use substring::Substring;
+use tempfile::NamedTempFile;
+
+// Needs a unix system with user-land
 
 #[test]
-// Needs a unix system with user-land
+#[ignore] // skip for code coverage, run with: cargo test -- --ignored
 fn test_example_script() {
-    let _listener = &TcpListener::bind("127.0.0.1:8888").unwrap();
+    let _listener = TcpListener::bind("127.0.0.1:8888").unwrap();
     let output = Command::new("./examples/test.yaml").output().unwrap();
     let data = String::from_utf8(output.stdout).unwrap();
     let logs = String::from_utf8(output.stderr).unwrap();
+    verify(data, logs);
+}
+
+#[test]
+fn test_script_api() {
+    let _listener = TcpListener::bind("127.0.0.1:8888").unwrap();
+    let log_file_tmp = NamedTempFile::new().unwrap();
+    let log_file = log_file_tmp.path().to_str().unwrap();
+    cowbird::log::set_log_file(log_file.to_string());
+    let stdout_file_tmp = NamedTempFile::new().unwrap();
+    let stdout_file = stdout_file_tmp.path().to_str().unwrap();
+    let guard = StdoutOverride::override_file(stdout_file).unwrap();
+    cowbird::util::script("./examples/test.yaml");
+    drop(guard);
+    let data = fs::read_to_string(stdout_file).unwrap();
+    let logs = fs::read_to_string(log_file).unwrap();
+    verify(data, logs);
+}
+
+// verify log data for needed fields
+fn verify(data: String, logs: String) {
     assert_eq!(data, "\nok\n\n", "stderr: {}", logs);
     for line in logs.split('\n') {
         if line.substring(0, 1) == "{" {
