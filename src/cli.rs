@@ -2,7 +2,7 @@ use crate::{cmd, log};
 use clap::{AppSettings, Parser};
 
 #[derive(Parser)]
-#[clap(author = "Erik Wilson <erik.e.wilson@gmail.com>")]
+// #[clap(author = "Erik Wilson <erik.e.wilson@gmail.com>")]
 #[clap(name = env!["CARGO_PKG_NAME"])]
 #[clap(version = env!["CARGO_PKG_VERSION"])]
 #[clap(about = "EDR tool", long_about = None)]
