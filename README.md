@@ -11,8 +11,8 @@
 
 ## About
 
-cowbird is a command-line tool for triggering scripted activity to be detected
-by EDR agents and produces structured logs for regression testing.
+`cowbird` is a command-line tool for triggering scripted activity to be detected
+by EDR agents, and produces structured logs for regression testing.
 
 ## Installation
 
@@ -124,8 +124,8 @@ See [examples/test.yaml](https://github.com/erikwilson/cowbird/blob/main/example
 as an example for using YAML document separators for ingesting multiple commands, and how
 those command inputs are formatted.
 
-If building from source on a unix system the example can be run like `./examples/test.yaml`,
-otherwise the script can be run with a pre-build binary using `cowbird script ./examples/test.yaml`.
+If building from source on a unix like system the example can be run with `./examples/test.yaml`,
+or the script can be run with a pre-built binary using `cowbird script ./examples/test.yaml`.
 
 ## License
 
