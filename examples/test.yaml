@@ -1,4 +1,5 @@
 #!/usr/bin/env -S cargo run -- -l /dev/stderr script
+# This example is designed for starting executables on unix like systems.
 ---
 # Start example without args
 Start:
