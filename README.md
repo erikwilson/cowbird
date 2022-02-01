@@ -2,10 +2,8 @@
 
 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Brown_headed_cowbird_female_in_JBWR_%2825487%29.jpg/784px-Brown_headed_cowbird_female_in_JBWR_%2825487%29.jpg" width="392" height="300" />
 
-<!--
 [![Crates.io](https://img.shields.io/crates/v/cowbird.svg)](https://crates.io/crates/cowbird)
 [![Docs.rs](https://docs.rs/cowbird/badge.svg)](https://docs.rs/cowbird)
--->
 [![CI](https://github.com/erikwilson/cowbird/workflows/CI/badge.svg)](https://github.com/erikwilson/cowbird/actions)
 [![Coverage Status](https://coveralls.io/repos/github/erikwilson/cowbird/badge.svg?branch=main)](https://coveralls.io/github/erikwilson/cowbird?branch=main)
 
