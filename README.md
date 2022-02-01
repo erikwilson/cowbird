@@ -132,6 +132,23 @@ those command inputs are formatted.
 If building from source on a unix like system the example can be run with `./examples/test.yaml`,
 or the script can be run with a pre-built binary using `cowbird script ./examples/test.yaml`.
 
+## Logging
+
+Writing to a specific log file can be accomplished by using the `-l` or `--log` flag with cowbird,
+if the file string provided is `-` then stdout will be used instead, for example:
+```sh
+cowbird --log - [cmd...]
+```
+
+If the `LOG_LEVEL` environment variable is defined then a filter can be applied to logging down to
+the module level. See [slog_envlogger docs](https://docs.rs/slog-envlogger/latest/slog_envlogger/)
+for specifics on valid values. For example, to change the log level to `error` but `debug` for
+the processes module:
+```sh
+export LOG_LEVEL="error,cowbird::process=debug"
+cowbird [...]
+```
+
 ## License
 
 Licensed under either of
