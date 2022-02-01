@@ -22,8 +22,8 @@ Select an installation method for installing `cowbird`:
 * Verify shasum and decompress to your path, eg:
 ```sh
 RELEASE=cowbird-0.1.1-macos-x86_64
-sha256sum -c ${RELEASE}.shasum
-tar -C /usr/local/bin ${RELEASE}.tar.gz
+sha256sum -c ${RELEASE}.sha256
+tar -C /usr/local/bin -xzf ${RELEASE}.tar.gz
 ```
 
 ### Install from Cargo
