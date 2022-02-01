@@ -1,3 +1,5 @@
+//! Shared logging functions
+
 use slog::{Drain, FilterLevel, Logger};
 use slog_envlogger::LogBuilder;
 use slog_json::Json;
@@ -5,6 +7,7 @@ use std::io::Write;
 use std::sync::Mutex;
 
 lazy_static! {
+    /// Reference logger for structured logging
     pub static ref LOGGER: Logger = {
         let args: Vec<String> = std::env::args().collect();
         let pkg_info = o!(
@@ -37,10 +40,13 @@ lazy_static! {
     static ref LOG_FILE: Mutex<String> = Mutex::new("-".to_string());
 }
 
+/// Sets the logger to use the given log_file
+/// Should be called before any logging occurs
 pub fn set_log_file(log_file: String) {
     *LOG_FILE.lock().unwrap() = log_file;
 }
 
+/// Returns the log file being used
 pub fn get_log_file() -> String {
     return LOG_FILE.lock().unwrap().clone();
 }

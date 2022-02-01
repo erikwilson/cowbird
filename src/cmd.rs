@@ -1,9 +1,12 @@
+//! Command structures for CLI and scripting use
+
 use crate::{file, log, network, process, util};
 use clap::{Parser, Subcommand};
 use network::Protocol;
 use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
 
+/// Commands that can be read via CLI or YAML
 #[derive(Subcommand, Debug, PartialEq, Serialize, Deserialize)]
 pub enum Commands {
     /// Starts a new process
@@ -56,6 +59,7 @@ pub enum Commands {
     },
 }
 
+/// Run a given command and produce log output
 pub fn run(command: &Commands) {
     match command {
         Commands::Start { exec, args } => process::start(exec, args),

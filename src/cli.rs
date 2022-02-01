@@ -1,3 +1,5 @@
+//! Command-line interface help text and parsing
+
 use crate::{cmd, log};
 use clap::{AppSettings, Parser};
 
@@ -17,12 +19,14 @@ pub struct Options {
     pub command: cmd::Commands,
 }
 
+/// Parse the command line options and set log file
 pub fn parse() -> Options {
     let opts = Options::parse();
     log::set_log_file(opts.log.clone());
     opts
 }
 
+/// Parse and run a command from arguments
 pub fn run() {
     cmd::run(&parse().command)
 }

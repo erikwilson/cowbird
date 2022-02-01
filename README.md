@@ -9,26 +9,33 @@
 
 ## About
 
-`cowbird` is a command-line tool for triggering scripted activity to be detected
-by EDR agents, and produces structured logs for regression testing.
+`cowbird` is a tool for triggering endpoint detection and response (EDR)
+agents, and produces structured logs for regression testing.
 
 ## Installation
 
-### Releases
+Select an installation method for installing `cowbird`:
 
-Download and install the latest pre-built binary from [Releases](https://github.com/erikwilson/cowbird/releases).
+### From Releases
 
-### Latest from Source
+* Download and install the latest pre-built binary from [Releases](https://github.com/erikwilson/cowbird/releases).
+* Verify shasum and decompress to your path, eg:
+```sh
+RELEASE=cowbird-0.1.1-macos-x86_64
+sha256sum -c ${RELEASE}.shasum
+tar -C /usr/local/bin ${RELEASE}.tar.gz
+```
 
-* Clone this repo `git clone https://github.com/erikwilson/cowbird.git`
+### From Cargo
+
 * Install the rust toolchain in order to have cargo installed by following
   [this](https://www.rust-lang.org/tools/install) guide.
-* run `cargo install --path cowbird`
+* run `cargo install cowbird`
 
 ## Commands
 
 ```
-cowbird 0.1.0
+cowbird 0.1.1
 EDR tool
 
 USAGE:

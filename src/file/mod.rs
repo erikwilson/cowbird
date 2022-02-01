@@ -1,3 +1,5 @@
+//! File oriented commands
+
 use crate::{log, util::binary_decode};
 use positioned_io::WriteAt;
 use std::fs;
@@ -9,6 +11,7 @@ lazy_static! {
     static ref LOGGER: slog::Logger = log::LOGGER.new(o!("type" => "file"));
 }
 
+/// Create a file
 pub fn create(file: &str) {
     let logger = LOGGER.new(o!(
         "cmd" => "create",
@@ -24,6 +27,7 @@ pub fn create(file: &str) {
     }
 }
 
+/// Modify a file given some data and offset
 pub fn modify(file: &str, data: &str, offset: &u64) {
     let bytes: &[u8] = &*binary_decode(data);
     let logger = LOGGER.new(o!(
@@ -41,6 +45,7 @@ pub fn modify(file: &str, data: &str, offset: &u64) {
     }
 }
 
+/// Delete a file
 pub fn delete(file: &str) {
     let logger = LOGGER.new(o!(
         "cmd" => "delete",

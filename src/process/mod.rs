@@ -1,3 +1,5 @@
+//! Process oriented commands
+
 use crate::log;
 use chrono::Local;
 use std::process::Command;
@@ -10,6 +12,7 @@ lazy_static! {
     static ref LOGGER: slog::Logger = log::LOGGER.new(o!("type" => "process"));
 }
 
+/// Start an executable with some given args
 pub fn start(exec: &str, args: &[String]) {
     let logger = LOGGER.new(o!(
         "cmd" => "start",

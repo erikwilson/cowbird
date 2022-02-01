@@ -1,3 +1,5 @@
+//! Network oriented commands
+
 use crate::{log, util::binary_decode};
 use clap::ArgEnum;
 use serde::{Deserialize, Serialize};
@@ -15,12 +17,15 @@ lazy_static! {
 
 #[derive(ArgEnum, Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub enum Protocol {
+    /// Transmission Control Protocol
     #[serde(alias = "tcp")]
     TCP,
+    /// User Datagram Protocol
     #[serde(alias = "udp")]
     UDP,
 }
 
+/// Protocol defaults to UDP
 impl Default for Protocol {
     fn default() -> Self {
         Protocol::UDP
@@ -32,6 +37,7 @@ struct SendResult {
     size: usize,
 }
 
+/// Send some data over a protocol to a given destination
 pub fn send(dest: &SocketAddr, data: &str, proto: &Protocol) {
     let bytes: &[u8] = &*binary_decode(data);
     let logger = LOGGER.new(o!(
