@@ -16,9 +16,9 @@ agents, and produces structured logs for regression testing.
 
 Select an installation method for installing `cowbird`:
 
-### From Releases
+### Install from Releases
 
-* Download and install the latest pre-built binary from [Releases](https://github.com/erikwilson/cowbird/releases).
+* Download the latest pre-built binary for your architecture from [Releases](https://github.com/erikwilson/cowbird/releases).
 * Verify shasum and decompress to your path, eg:
 ```sh
 RELEASE=cowbird-0.1.1-macos-x86_64
@@ -26,7 +26,7 @@ sha256sum -c ${RELEASE}.shasum
 tar -C /usr/local/bin ${RELEASE}.tar.gz
 ```
 
-### From Cargo
+### Install from Cargo
 
 * Install the rust toolchain in order to have cargo installed by following
   [this](https://www.rust-lang.org/tools/install) guide.
