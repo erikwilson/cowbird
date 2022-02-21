@@ -11,7 +11,7 @@ license = "MIT OR Apache-2.0"
 [dependencies]
 clap = { version = "3.0.10", features = ["derive"] }
 slog = "~2.5"
-slog-json = "~2.5"
+slog-json = "~2.6"
 slog-envlogger = "~2.2"
 lazy_static = "~1.4"
 hex = "~0.4"
